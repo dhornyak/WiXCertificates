@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
+     xmlns:iis="http://schemas.microsoft.com/wix/IIsExtension">
+	<Product Id="*" Name="WiXCertificates.Setup" Language="1033" Version="1.0.0.0" Manufacturer="WiX Certificates" UpgradeCode="279c8f15-bc74-4d86-950e-e27dd3ae682e">
+		<Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+
+		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+		<MediaTemplate />
+
+		<Feature Id="ProductFeature" Title="WiXCertificates.Setup" Level="1">
+			<ComponentGroupRef Id="ProductComponents" />
+      <ComponentGroupRef Id="ComponentGroup.Certificate" />
+		</Feature>
+
+    <Property Id="CERTIFICATE_PATH" Value="D:\certs\development\development1.crt" Secure="yes" />
+	</Product>
+
+	<Fragment>
+		<Directory Id="TARGETDIR" Name="SourceDir">
+			<Directory Id="ProgramFilesFolder">
+				<Directory Id="INSTALLFOLDER" Name="WiXCertificates.Setup" />
+			</Directory>
+		</Directory>
+	</Fragment>
+
+  <Fragment>
+    <ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
+      <Component Id="Component.Product">
+        <File Id="File.Product" Source="Product.wxs" KeyPath="yes" />
+      </Component>
+    </ComponentGroup>
+  </Fragment>
+
+  <Fragment>
+    <ComponentGroup Id="ComponentGroup.Certificate" Directory="INSTALLFOLDER">
+      <Component Id="Component.Certificate" Guid="DE1B9EE7-C523-4F3A-903C-ED77B1A7799F" KeyPath="yes">
+        <iis:Certificate Id="Certificate.Root" 
+                         CertificatePath="[CERTIFICATE_PATH]" 
+                         Name="Development certificate for the WiX Certificates project" 
+                         StoreLocation="localMachine" 
+                         StoreName="root" 
+                         Request="no" />
+      </Component>
+    </ComponentGroup>
+  </Fragment>
+</Wix>
